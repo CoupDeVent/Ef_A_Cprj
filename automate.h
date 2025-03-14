@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_STATES 100
 #define MAX_SYMBOLS 10
@@ -38,5 +39,8 @@ typedef struct {
 void lire_automate_sur_fichier(char *nom_fichier, Automate *AF);
 void afficher_automate(Automate *AF);
 
+bool est_deterministe(Automate *AF);
+bool est_standard(Automate *AF);
+bool est_complet(Automate *AF);
 
 #endif //AUTOMATES_PRJ_AUTOMATE_H

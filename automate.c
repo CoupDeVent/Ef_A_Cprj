@@ -129,7 +129,6 @@ void afficher_automate(Automate *AF) {
             int temp = 0;
             count++;
             printf(" ");
-            if (AF->transitions[count-1].num_destinations == 0) found = 0;
             for (int d = 0; d < AF->transitions[count-1].num_destinations; d++) {
                 if (d > 0) printf(",");
                 printf("%d", AF->transitions[count-1].to[d]);
@@ -153,4 +152,100 @@ void afficher_automate(Automate *AF) {
         }
         printf("\n");
     }
+}
+
+bool est_deterministe(Automate *AF) {
+    // Vérifier qu'il n'y a qu'un seul état initial
+    if (AF->num_initial_states != 1) {
+        return false;
+    }
+
+    // Vérifier qu'aucune transition n'a plus d'une destination
+    for (int i = 0; i < AF->num_transitions; i++) {
+        if (AF->transitions[i].num_destinations > 1) {
+            return false;
+        }
+    }
+
+    // Cas Transition sans symbole
+    for (int i = 0; i < AF->num_transitions; i++) {
+        if (AF->transitions[i].symbol == 'E') {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool est_standard(Automate *AF) {
+    // Vérifier qu'il y a un unique état initial
+    if (AF->num_initial_states != 1) {
+        return false;
+    }
+
+    int etat_initial = AF->initial_states[0];
+
+    // Vérifier que l'état initial n'a aucune transition entrante
+    for (int i = 0; i < AF->num_transitions; i++) {
+        for (int j = 0; j < AF->transitions[i].num_destinations; j++) {
+            if (AF->transitions[i].to[j] == etat_initial) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool est_complet(Automate *AF) {
+    // Vérifier que chaque état possède une transition pour chaque symbole de l'alphabet
+    for (int i = 0; i < AF->num_states; i++) {
+        for (int j = 0; j < AF->num_symbols; j++) {
+            char symbole = AF->symbols[j];
+            bool transition_trouvee = false;
+
+            // Chercher si l'état 'i' a une transition avec ce symbole
+            for (int k = 0; k < AF->num_transitions; k++) {
+                if (AF->transitions[k].from == i && AF->transitions[k].symbol == symbole && AF->transitions[k].num_destinations > 0) {
+                    transition_trouvee = true;
+                    break;
+                }
+            }
+
+            // Si une transition manque, l'automate est incomplet
+            if (!transition_trouvee) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void determinisation
+
+void rendre_standard(Automate *AF) {
+    // Vérifier si l'automate est déjà standard
+    if (AF->num_initial_states != 1) {
+        printf("temp pas fi\n");
+        return;
+    }
+
+    int ancien_initial = AF->initial_states[0];
+    int nouvel_initial = AF->num_states; // Créer un nouvel état initial
+    AF->num_states++;
+
+    // Changement de l'état initial
+    AF->initial_states[0] = nouvel_initial;
+
+    // Ajouter des transitions du nouvel état initial vers l'ancien
+    int temp = 0;
+    for (int i = 0; i < AF->num_symbols; i++) {
+        AF->transitions[AF->num_transitions + i].from = nouvel_initial;
+        AF->transitions[AF->num_transitions + i].to[0] = ancien_initial;
+        AF->transitions[AF->num_transitions + i].num_destinations = 1;
+        AF->transitions[AF->num_transitions + i].symbol = AF->symbols[i];
+    }
+    AF->num_transitions += temp;
+    afficher_automate(AF);
 }

@@ -222,31 +222,44 @@ bool est_complet(Automate *AF) {
     return true;
 }
 
-void determinisation
-
 void rendre_standard(Automate *AF) {
-    // Vérifier si l'automate est déjà standard
-    if (AF->num_initial_states != 1) {
-        printf("temp pas fi\n");
-        return;
+    int ancien_initial[AF->num_initial_states];
+    int ancien_num_ini = AF->num_initial_states;
+    for (int i = 0; i < ancien_num_ini; i++) {
+        ancien_initial[i] = AF->initial_states[i];
     }
-
-    int ancien_initial = AF->initial_states[0];
     int nouvel_initial = AF->num_states; // Créer un nouvel état initial
     AF->num_states++;
 
     // Changement de l'état initial
     AF->initial_states[0] = nouvel_initial;
+    AF->num_initial_states = 1;
 
-    // Ajouter des transitions du nouvel état initial vers l'ancien
-    int temp = 0;
     for (int i = 0; i < AF->num_symbols; i++) {
-        AF->transitions[AF->num_transitions + i].from = nouvel_initial;
-        AF->transitions[AF->num_transitions + i].to[0] = ancien_initial;
-        AF->transitions[AF->num_transitions + i].num_destinations = 1;
-        AF->transitions[AF->num_transitions + i].symbol = AF->symbols[i];
-        temp++;
+        Transition nouvel_transition;
+        nouvel_transition.from = nouvel_initial;
+        nouvel_transition.num_destinations = 0;
+        nouvel_transition.symbol = AF->symbols[i];
+
+        for (int k = 0; k < ancien_num_ini; k++) {
+            for (int j = 0; j < AF->transitions[ancien_initial[k]*2 + i].num_destinations; j++) {
+                int in = false;
+                for (int z = 0; z < nouvel_transition.num_destinations; z++) {
+                    if (nouvel_transition.to[z] == AF->transitions[ancien_initial[k]*AF->num_symbols + i].to[j]) in = true;
+                }
+                if (!in) {
+                    nouvel_transition.to[nouvel_transition.num_destinations] = AF->transitions[ancien_initial[k]*AF->num_symbols + i].to[j];
+                    nouvel_transition.num_destinations++;
+                }
+            }
+        }
+
+        AF->transitions[AF->num_transitions] = nouvel_transition;
+        if (AF->transitions[AF->num_transitions].num_destinations > AF->max_destination_in_all_transition) {
+            AF->max_destination_in_all_transition = AF->transitions[AF->num_transitions].num_destinations;
+        }
+        AF->num_transitions++;
     }
-    AF->num_transitions += temp;
     afficher_automate(AF);
 }
+

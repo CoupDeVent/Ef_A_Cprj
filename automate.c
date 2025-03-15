@@ -245,6 +245,7 @@ void rendre_standard(Automate *AF) {
         AF->transitions[AF->num_transitions + i].to[0] = ancien_initial;
         AF->transitions[AF->num_transitions + i].num_destinations = 1;
         AF->transitions[AF->num_transitions + i].symbol = AF->symbols[i];
+        temp++;
     }
     AF->num_transitions += temp;
     afficher_automate(AF);

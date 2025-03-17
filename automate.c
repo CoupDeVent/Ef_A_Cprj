@@ -32,15 +32,21 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
     }
 
     fscanf(file, "%d", &AF->num_states);
+    for(int i = 0; i < AF->num_states; i++){
+        AF->states[i].inter_states[0] = i;
+        AF->states[i].num_inter_states = 1;
+    }
 
     fscanf(file, "%d", &AF->num_initial_states);
     for (int i = 0; i < AF->num_initial_states; i++) {
-        fscanf(file, "%d", &AF->initial_states[i]);
+        fscanf(file, "%d", &AF->initial_states[i].inter_states[0]);
+        AF->initial_states[i].num_inter_states = 1;
     }
 
     fscanf(file, "%d", &AF->num_final_states);
     for (int i = 0; i < AF->num_final_states; i++) {
-        fscanf(file, "%d", &AF->final_states[i]);
+        fscanf(file, "%d", &AF->final_states[i].inter_states[0]);
+        AF->final_states[i].num_inter_states = 1;
     }
 
     fscanf(file, "%d", &AF->num_transitions);
@@ -49,7 +55,8 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
         char symbol;
         fscanf(file, "%d %c %d", &from, &symbol, &num_to);
 
-        AF->transitions[i].from = from;
+        AF->transitions[i].from[0] = from;
+        AF->transitions[i].num_depart = 1;
         AF->transitions[i].symbol = symbol;
 
         AF->transitions[i].num_destinations = num_to;
@@ -59,23 +66,28 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
         }
     }
 
-    AF->max_destination_in_all_transition = 0;
-    for(int k = 0; k < AF->num_transitions; k++){
-        if(AF->transitions[k].num_destinations > AF->max_destination_in_all_transition){
-            AF->max_destination_in_all_transition = AF->transitions[k].num_destinations;
-        }
-    }
-
     fclose(file);
 }
 
 void afficher_automate(Automate *AF) {
-    int col_width = 1 + (AF->max_destination_in_all_transition * 2); // Largeur dynamique
+    int max_dest = 0;
+    for(int k = 0; k < AF->num_transitions; k++){
+        if(AF->transitions[k].num_destinations > max_dest){
+            max_dest = AF->transitions[k].num_destinations;
+        }
+    }
+    int max_inter_states = 0;
+    for(int k = 0; k < AF->num_states; k++){
+        if(AF->states[k].num_inter_states > max_inter_states){
+            max_inter_states = AF->states[k].num_inter_states;
+        }
+    }
+    int col_width = 1 + (max_dest * 2); // Largeur dynamique
     int state_col_width = 3; // Largeur fixe pour la colonne des états
 
     // Ligne de séparation horizontale
     printf("+");
-    for (int i = 0; i < state_col_width*2+1; i++) printf("-");
+    for (int i = 0; i < state_col_width*2 + max_inter_states*2 -1; i++) printf("-");
     printf("+");
     for (int i = 0; i < AF->num_symbols; i++) {
         for (int j = 0; j < col_width; j++) printf("-");
@@ -85,7 +97,7 @@ void afficher_automate(Automate *AF) {
 
     // En-tête du tableau
     printf("| %-1s  ", "");
-    printf(" %-1s |", "");
+    printf(" %-*s |", max_inter_states*2 -1, "");
     for (int i = 0; i < AF->num_symbols; i++) {
         printf(" %-*c |", col_width - 2, AF->symbols[i]);
     }
@@ -93,10 +105,10 @@ void afficher_automate(Automate *AF) {
 
     // Ligne de séparation horizontale
     printf("+");
-    for(int k = 0; k < 2; k++){
-        for (int i = 0; i < state_col_width; i++) printf("-");
-        printf("+");
-    }
+    for (int i = 0; i < state_col_width; i++) printf("-");
+    printf("+");
+    for (int i = 0; i < max_inter_states*2 +1; i++) printf("-");
+    printf("+");
     for (int i = 0; i < AF->num_symbols; i++) {
         for (int j = 0; j < col_width; j++) printf("-");
         printf("+");
@@ -109,20 +121,37 @@ void afficher_automate(Automate *AF) {
 
         int particular_state = 0;
         for(int z = 0; z < AF->num_initial_states; z++){
-            if(AF->initial_states[z] == i){
-                particular_state = 1;
-                printf("| %-1s |", "E");
+            if(AF->initial_states[z].num_inter_states == AF->states[i].num_inter_states){
+                int yes = 1;
+                for(int k = 0; k < AF->states[i].num_inter_states; k++){
+                    if(AF->initial_states[z].inter_states[k] != AF->states[i].inter_states[k]) yes = 0;
+                }
+                if(yes){
+                    particular_state = 1;
+                    printf("| %-s |", "E");
+                }
             }
         }
         for(int z = 0; z < AF->num_final_states; z++){
-            if(AF->final_states[z] == i){
-                particular_state = 1;
-                printf("| %-1s |", "S");
+            if(AF->final_states[z].num_inter_states == AF->states[i].num_inter_states){
+                int yes = 1;
+                for(int k = 0; k < AF->states[i].num_inter_states; k++){
+                    if(AF->final_states[z].inter_states[k] != AF->states[i].inter_states[k]) yes = 0;
+                }
+                if(yes){
+                    particular_state = 1;
+                    printf("| %-s |", "S");
+                }
             }
         }
         if(!particular_state) printf("| %-1s |", "");
 
-        printf(" %-1d |", i);
+        printf(" ");
+        for(int z = 0; z < AF->states[i].num_inter_states; z++){
+            if (z > 0) printf(",");
+            printf("%d", AF->states[i].inter_states[z]);
+        }
+        printf(" %-*s|",max_inter_states * 2 - AF->states[i].num_inter_states*2, "");
 
         for (int j = 0; j < AF->num_symbols; j++) {
             int found = 0;
@@ -142,10 +171,10 @@ void afficher_automate(Automate *AF) {
 
         // Ligne de séparation horizontale
         printf("+");
-        for(int k = 0; k < 2; k++){
-            for (int i = 0; i < state_col_width; i++) printf("-");
-            printf("+");
-        }
+        for (int i = 0; i < state_col_width; i++) printf("-");
+        printf("+");
+        for (int i = 0; i < max_inter_states*2 +1; i++) printf("-");
+        printf("+");
         for (int j = 0; j < AF->num_symbols; j++) {
             for (int k = 0; k < col_width; k++) printf("-");
             printf("+");
@@ -183,13 +212,16 @@ bool est_standard(Automate *AF) {
         return false;
     }
 
-    int etat_initial = AF->initial_states[0];
+    int etat_initial[MAX_STATES];
+    memcpy(etat_initial, AF->initial_states[0].inter_states, sizeof(int)*AF->initial_states[0].num_inter_states);
 
     // Vérifier que l'état initial n'a aucune transition entrante
     for (int i = 0; i < AF->num_transitions; i++) {
         for (int j = 0; j < AF->transitions[i].num_destinations; j++) {
-            if (AF->transitions[i].to[j] == etat_initial) {
-                return false;
+            for (int k = 0; k < AF->initial_states[0].num_inter_states; k++){
+                if (AF->transitions[i].to[j] == etat_initial[k]) {
+                    return false;
+                }
             }
         }
     }
@@ -206,7 +238,7 @@ bool est_complet(Automate *AF) {
 
             // Chercher si l'état 'i' a une transition avec ce symbole
             for (int k = 0; k < AF->num_transitions; k++) {
-                if (AF->transitions[k].from == i && AF->transitions[k].symbol == symbole && AF->transitions[k].num_destinations > 0) {
+                if (AF->transitions[k].from == AF->transitions[i].from && AF->transitions[k].symbol == symbole && AF->transitions[k].num_destinations > 0) {
                     transition_trouvee = true;
                     break;
                 }
@@ -223,12 +255,15 @@ bool est_complet(Automate *AF) {
 }
 
 void rendre_standard(Automate *AF) {
-    int ancien_initial[AF->num_initial_states];
+    States ancien_initial[AF->num_initial_states];
     int ancien_num_ini = AF->num_initial_states;
     for (int i = 0; i < ancien_num_ini; i++) {
         ancien_initial[i] = AF->initial_states[i];
     }
-    int nouvel_initial = AF->num_states; // Créer un nouvel état initial
+    States nouvel_initial; // Créer un nouvel état initial
+    nouvel_initial.inter_states[0] = AF->num_states;
+    nouvel_initial.num_inter_states = 1;
+    AF->states[AF->num_states] = nouvel_initial;
     AF->num_states++;
 
     // Changement de l'état initial
@@ -237,32 +272,44 @@ void rendre_standard(Automate *AF) {
 
     for (int i = 0; i < AF->num_symbols; i++) {
         Transition nouvel_transition;
-        nouvel_transition.from = nouvel_initial;
+        memcpy(nouvel_transition.from, nouvel_initial.inter_states, sizeof(int) * nouvel_transition.num_depart);
+        //nouvel_transition.from = nouvel_initial.inter_states;
         nouvel_transition.num_destinations = 0;
+        nouvel_transition.num_depart = 1;
         nouvel_transition.symbol = AF->symbols[i];
 
         for (int k = 0; k < ancien_num_ini; k++) {
-            for (int j = 0; j < AF->transitions[ancien_initial[k]*2 + i].num_destinations; j++) {
+            for (int j = 0; j < AF->transitions[ancien_initial[k].inter_states[0]*2 + i].num_destinations; j++) { // non //////////////////////////////////////////////////////////////////
                 int in = false;
                 for (int z = 0; z < nouvel_transition.num_destinations; z++) {
-                    if (nouvel_transition.to[z] == AF->transitions[ancien_initial[k]*AF->num_symbols + i].to[j]) in = true;
+                    if (nouvel_transition.to[z] == AF->transitions[ancien_initial[k].inter_states[0]*AF->num_symbols + i].to[j]) in = true;
                 }
                 if (!in) {
-                    nouvel_transition.to[nouvel_transition.num_destinations] = AF->transitions[ancien_initial[k]*AF->num_symbols + i].to[j];
+                    nouvel_transition.to[nouvel_transition.num_destinations] = AF->transitions[ancien_initial[k].inter_states[0]*AF->num_symbols + i].to[j];
                     nouvel_transition.num_destinations++;
                 }
             }
         }
 
         AF->transitions[AF->num_transitions] = nouvel_transition;
-        if (AF->transitions[AF->num_transitions].num_destinations > AF->max_destination_in_all_transition) {
-            AF->max_destination_in_all_transition = AF->transitions[AF->num_transitions].num_destinations;
-        }
         AF->num_transitions++;
     }
     afficher_automate(AF);
 }
 
+/*
 void rendre_deterministe(Automate *AF) {
+    Automate_Deterministe AF_DET = AF;
 
+    for (int k = 0; k < AF_DET.num_initial_states; k++) {
+        AF_DET.initial_states[0].inter_states[k] =;
+        AF_DET.initial_states[0].num_inter_states++;
+    }
+    AF_DET.num_initial_states = 1;
+
+    bool end = false;
+    while(end != true){
+
+    }
 }
+ */

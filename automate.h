@@ -10,28 +10,35 @@
 #define MAX_SYMBOLS 10
 #define MAX_TRANSITIONS 200
 #define MAX_DESTINATIONS 10
+#define MAX_DEPART 10
 
 typedef struct {
-    int from;
+    int from[MAX_DEPART];
     char symbol;
     int to[MAX_DESTINATIONS];
+    int num_depart;
     int num_destinations;
 } Transition;
 
 typedef struct {
+    int inter_states[MAX_STATES];
+    int num_inter_states;
+} States;
+
+typedef struct {
     int num_states;
+    States states[MAX_STATES];
 
     int num_symbols;
     char symbols[MAX_SYMBOLS];
 
     int num_initial_states;
-    int initial_states[MAX_STATES];
+    States initial_states[MAX_STATES];
 
     int num_final_states;
-    int final_states[MAX_STATES];
+    States final_states[MAX_STATES];
 
     int num_transitions;
-    int max_destination_in_all_transition;
     Transition transitions[MAX_TRANSITIONS];
 } Automate;
 
@@ -42,5 +49,8 @@ void afficher_automate(Automate *AF);
 bool est_deterministe(Automate *AF);
 bool est_standard(Automate *AF);
 bool est_complet(Automate *AF);
+
+void rendre_standard(Automate *AF);
+void rendre_deterministe(Automate *AF);
 
 #endif //AUTOMATES_PRJ_AUTOMATE_H

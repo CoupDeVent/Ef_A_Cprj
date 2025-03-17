@@ -12,9 +12,9 @@ int main() {
     printf("\n complet ? : %hhd", est_complet(&AF));
 
     printf("\n\n");
-    //rendre_standard(&AF);
+    rendre_standard(&AF);
 
-    rendre_deterministe(&AF);
-    afficher_automate(&AF);
+    //rendre_deterministe(&AF);
+    //afficher_automate(&AF);
     return 0;
 }

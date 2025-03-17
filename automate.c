@@ -263,3 +263,6 @@ void rendre_standard(Automate *AF) {
     afficher_automate(AF);
 }
 
+void rendre_deterministe(Automate *AF) {
+
+}

@@ -40,6 +40,7 @@ typedef struct {
 
     int num_transitions;
     Transition transitions[MAX_TRANSITIONS];
+    bool a_ete_rendu_deterministe;
 } Automate;
 
 
@@ -52,5 +53,9 @@ bool est_complet(Automate *AF);
 
 void rendre_standard(Automate *AF);
 void rendre_deterministe(Automate *AF);
+void rendre_complet(Automate *AF);
+
+bool reconnaitre_mot(Automate *AF, const char *mot);
+void complementaire_automate(Automate *AF);
 
 #endif //AUTOMATES_PRJ_AUTOMATE_H

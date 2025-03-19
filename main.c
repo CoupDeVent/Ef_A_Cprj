@@ -3,7 +3,9 @@
 
 int main() {
     Automate AF;
-    char *file_name = "automates/automate_test.txt";
+    AF.a_ete_rendu_deterministe = false;
+
+    char *file_name = "automates/automate_5.txt";
     lire_automate_sur_fichier(file_name, &AF);
     afficher_automate(&AF);
 
@@ -14,7 +16,16 @@ int main() {
     printf("\n\n");
     //rendre_standard(&AF);
 
+
     rendre_deterministe(&AF);
     afficher_automate(&AF);
+    printf("\n%hhd", est_deterministe(&AF));
+    //rendre_complet(&AF);
+    //afficher_automate(&AF);
+
+    complementaire_automate(&AF);
+    afficher_automate(&AF);
+
+    //printf("%hhd", reconnaitre_mot(&AF, "ab"));
     return 0;
 }

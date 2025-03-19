@@ -87,7 +87,7 @@ void afficher_automate(Automate *AF) {
 
     // Ligne de séparation horizontale
     printf("+");
-    for (int i = 0; i < state_col_width*2 + max_inter_states*2 -1; i++) printf("-");
+    for (int i = 0; i < state_col_width*2 + max_inter_states*2; i++) printf("-");
     printf("+");
     for (int i = 0; i < AF->num_symbols; i++) {
         for (int j = 0; j < col_width; j++) printf("-");
@@ -96,7 +96,7 @@ void afficher_automate(Automate *AF) {
     printf("\n");
 
     // En-tête du tableau
-    printf("| %-1s  ", "");
+    printf("| %-2s  ", "");
     printf(" %-*s |", max_inter_states*2 -1, "");
     for (int i = 0; i < AF->num_symbols; i++) {
         printf(" %-*c |", col_width - 2, AF->symbols[i]);
@@ -105,7 +105,7 @@ void afficher_automate(Automate *AF) {
 
     // Ligne de séparation horizontale
     printf("+");
-    for (int i = 0; i < state_col_width; i++) printf("-");
+    for (int i = 0; i < state_col_width+1; i++) printf("-");
     printf("+");
     for (int i = 0; i < max_inter_states*2 +1; i++) printf("-");
     printf("+");
@@ -120,6 +120,7 @@ void afficher_automate(Automate *AF) {
     for (int i = 0; i < AF->num_states; i++) {
 
         int particular_state = 0;
+        printf("| ");
         for(int z = 0; z < AF->num_initial_states; z++){
             if(AF->initial_states[z].num_inter_states == AF->states[i].num_inter_states){
                 int yes = 1;
@@ -127,8 +128,8 @@ void afficher_automate(Automate *AF) {
                     if(AF->initial_states[z].inter_states[k] != AF->states[i].inter_states[k]) yes = 0;
                 }
                 if(yes){
-                    particular_state = 1;
-                    printf("| %-s |", "E");
+                    particular_state++;
+                    printf("%-1s", "E");
                 }
             }
         }
@@ -139,17 +140,20 @@ void afficher_automate(Automate *AF) {
                     if(AF->final_states[z].inter_states[k] != AF->states[i].inter_states[k]) yes = 0;
                 }
                 if(yes){
-                    particular_state = 1;
-                    printf("| %-s |", "S");
+                    particular_state++;
+                    printf("%-1s", "S");
                 }
             }
         }
-        if(!particular_state) printf("| %-1s |", "");
+        if(particular_state == 0) printf(" %-1s", "");
+        if(particular_state == 1) printf(" ");
+        printf(" |");
 
         printf(" ");
         for(int z = 0; z < AF->states[i].num_inter_states; z++){
             if (z > 0) printf(",");
-            printf("%d", AF->states[i].inter_states[z]);
+            if(AF->states[i].inter_states[z] == 9999) printf("%c", 'P');
+            else printf("%d", AF->states[i].inter_states[z]);
         }
         printf(" %-*s|",max_inter_states * 2 - AF->states[i].num_inter_states*2, "");
 
@@ -160,7 +164,8 @@ void afficher_automate(Automate *AF) {
             printf(" ");
             for (int d = 0; d < AF->transitions[count-1].num_destinations; d++) {
                 if (d > 0) printf(",");
-                printf("%d", AF->transitions[count-1].to[d]);
+                if (AF->transitions[count-1].to[d] == 9999) printf("%c", 'P');
+                else printf("%d", AF->transitions[count-1].to[d]);
                 temp = d;
                 found = 1;
             }
@@ -171,7 +176,7 @@ void afficher_automate(Automate *AF) {
 
         // Ligne de séparation horizontale
         printf("+");
-        for (int i = 0; i < state_col_width; i++) printf("-");
+        for (int i = 0; i < state_col_width+1; i++) printf("-");
         printf("+");
         for (int i = 0; i < max_inter_states*2 +1; i++) printf("-");
         printf("+");
@@ -184,6 +189,8 @@ void afficher_automate(Automate *AF) {
 }
 
 bool est_deterministe(Automate *AF) {
+    if(AF->a_ete_rendu_deterministe == true) return true;
+
     // Vérifier qu'il n'y a qu'un seul état initial
     if (AF->num_initial_states != 1) {
         return false;
@@ -231,26 +238,9 @@ bool est_standard(Automate *AF) {
 
 bool est_complet(Automate *AF) {
     // Vérifier que chaque état possède une transition pour chaque symbole de l'alphabet
-    for (int i = 0; i < AF->num_states; i++) {
-        for (int j = 0; j < AF->num_symbols; j++) {
-            char symbole = AF->symbols[j];
-            bool transition_trouvee = false;
-
-            // Chercher si l'état 'i' a une transition avec ce symbole
-            for (int k = 0; k < AF->num_transitions; k++) {
-                if (AF->transitions[k].from == AF->transitions[i].from && AF->transitions[k].symbol == symbole && AF->transitions[k].num_destinations > 0) {
-                    transition_trouvee = true;
-                    break;
-                }
-            }
-
-            // Si une transition manque, l'automate est incomplet
-            if (!transition_trouvee) {
-                return false;
-            }
-        }
+    for (int k = 0; k < AF->num_transitions; k++){
+        if(AF->transitions[k].num_destinations == 0) return false;
     }
-
     return true;
 }
 
@@ -424,4 +414,99 @@ void rendre_deterministe(Automate *AF) {
 
     // Mise à jour de l’automate original avec l’AFD
     memcpy(AF, &AFD, sizeof(Automate));
+    AF->a_ete_rendu_deterministe = true;
+}
+
+void rendre_complet(Automate *AF) {
+    AF->states[AF->num_states].inter_states[0] = 9999; // 9999 code pour etat poubelle
+    AF->states[AF->num_states].num_inter_states = 1;
+    AF->num_states++;
+
+    for(int k = 0; k < AF->num_transitions; k++){
+        if(AF->transitions[k].num_destinations == 0){
+            AF->transitions[k].to[0] = 9999;
+            AF->transitions[k].num_destinations = 1;
+        }
+    }
+
+    for(int k = 0; k < AF->num_symbols; k++){
+        AF->transitions[AF->num_transitions].to[0] = 9999;
+        AF->transitions[AF->num_transitions].num_destinations = 1;
+        AF->transitions[AF->num_transitions].from[0] = 9999;
+        AF->transitions[AF->num_transitions].num_depart = 1;
+        AF->num_transitions++;
+    }
+}
+
+bool reconnaitre_mot(Automate *AF, const char *mot) {
+    int etat_actuel = AF->initial_states[0].inter_states[0];
+
+    // Parcourir chaque symbole du mot
+    for (int i = 0; mot[i] != '\0'; i++) {
+        char symbole = mot[i];
+        bool transition_trouvee = false;
+
+        // Chercher la transition correspondant au symbole
+        for (int j = 0; j < AF->num_transitions; j++) {
+            if (AF->transitions[j].from[0] == etat_actuel && AF->transitions[j].symbol == symbole) {
+                etat_actuel = AF->transitions[j].to[0];
+                transition_trouvee = true;
+                break;
+            }
+        }
+
+        // Si aucune transition trouvée pour ce symbole, le mot est rejeté
+        if (!transition_trouvee) {
+            return false;
+        }
+    }
+
+    // Vérifier si l'état final est atteint
+    for (int i = 0; i < AF->num_final_states; i++) {
+        if (etat_actuel == AF->final_states[i].inter_states[0]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool etats_sont_egaux(States a, States b) {
+    if (a.num_inter_states != b.num_inter_states) {
+        return false;
+    }
+    for (int i = 0; i < a.num_inter_states; i++) {
+        if (a.inter_states[i] != b.inter_states[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void complementaire_automate(Automate *AF) {
+    bool est_final[MAX_STATES] = {false};
+
+    for (int i = 0; i < AF->num_final_states; i++) {
+        for (int j = 0; j < AF->num_states; j++) {
+            if (etats_sont_egaux(AF->final_states[i], AF->states[j])) {
+                est_final[j] = true; // Marque l'état comme final
+            }
+        }
+    }
+
+    // Création du nouvel automate complémentaire
+    Automate AF_COMP;
+    memcpy(&AF_COMP, AF, sizeof(Automate));
+    AF_COMP.num_final_states = 0;
+
+    // Inverser les états finaux et non finaux
+    for (int i = 0; i < AF->num_states; i++) {
+        if (!est_final[i]) { // Un état qui n'était pas final devient final
+            AF_COMP.final_states[AF_COMP.num_final_states] = AF->states[i];
+            AF_COMP.num_final_states++;
+        }
+    }
+
+    // Mise à jour de l'automate d'origine
+    memcpy(AF, &AF_COMP, sizeof(Automate));
 }

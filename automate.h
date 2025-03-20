@@ -53,6 +53,7 @@ bool est_complet(Automate *AF);
 
 void rendre_standard(Automate *AF);
 void rendre_deterministe(Automate *AF);
+void rendre_deterministe_asynchrone(Automate *AF);
 void rendre_complet(Automate *AF);
 
 bool reconnaitre_mot(Automate *AF, const char *mot);

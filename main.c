@@ -37,8 +37,8 @@ int main() {
             printf("\n    4- Rendre complementaire l'automate.");
             printf("\n    5- Reconnaitre un mot dans l'automate.");
             printf("\n    6- Afficher l'automate.");
-            printf("\n    7- Reinisialise l'automate.");
-            printf("\n    8- Quiter.");
+            printf("\n    7- Reinitialise l'automate.");
+            printf("\n    8- Quitter.");
             printf("\n");
             int faire = -1;
             while(faire < 1 || faire > 8){
@@ -58,7 +58,10 @@ int main() {
                 case 2:{
                     if(est_deterministe(&AF)) printf("\nL'automate est deja deterministe.");
                     else{
-                        rendre_deterministe(&AF);
+                        if(num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
+                            rendre_deterministe_asynchrone(&AF);
+                        }
+                        else rendre_deterministe(&AF);
                         printf("\nL'automate a ete rendu deterministe :\n");
                         afficher_automate(&AF);
                     }

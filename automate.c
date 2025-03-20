@@ -20,6 +20,7 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
          4 a 1 2
          4 c 0
      */
+    AF->a_ete_rendu_deterministe = false;
     FILE *file = fopen(nom_fichier, "r");
     if (!file) {
         printf("Erreur: Impossible d'ouvrir le fichier %s\n", nom_fichier);
@@ -32,10 +33,6 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
     }
 
     fscanf(file, "%d", &AF->num_states);
-    for(int i = 0; i < AF->num_states; i++){
-        AF->states[i].inter_states[0] = i;
-        AF->states[i].num_inter_states = 1;
-    }
 
     fscanf(file, "%d", &AF->num_initial_states);
     for (int i = 0; i < AF->num_initial_states; i++) {
@@ -66,11 +63,16 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
         }
     }
 
+    for(int i = 0; i < AF->num_states; i++){
+        memcpy(AF->states[i].inter_states, AF->transitions[i*AF->num_symbols].from, sizeof(int) * MAX_DEPART);
+        AF->states[i].num_inter_states = AF->transitions[i*AF->num_symbols].num_depart;
+    }
+
     fclose(file);
 }
 
 void afficher_automate(Automate *AF) {
-    int max_dest = 0;
+    int max_dest = 1;
     for(int k = 0; k < AF->num_transitions; k++){
         if(AF->transitions[k].num_destinations > max_dest){
             max_dest = AF->transitions[k].num_destinations;
@@ -283,7 +285,6 @@ void rendre_standard(Automate *AF) {
         AF->transitions[AF->num_transitions] = nouvel_transition;
         AF->num_transitions++;
     }
-    afficher_automate(AF);
 }
 
 bool etat_existe(States etats[MAX_STATES], int nb_etats, States nouvel_etat) {
@@ -509,4 +510,295 @@ void complementaire_automate(Automate *AF) {
 
     // Mise à jour de l'automate d'origine
     memcpy(AF, &AF_COMP, sizeof(Automate));
+}
+
+void minimiser_automate(Automate *AF) {
+    if (!est_deterministe(AF) || !est_complet(AF)) {
+        printf("L'automate doit être déterministe et complet avant la minimisation.\n");
+        return;
+    }
+
+    bool distinction[MAX_STATES][MAX_STATES] = {false};
+    for (int i = 0; i < AF->num_states; i++) {
+        for (int j = i + 1; j < AF->num_states; j++) {
+            if (AF->states[i].inter_states[0] == 9999 || AF->states[j].inter_states[0] == 9999) {
+                distinction[i][j] = distinction[j][i] = true;
+                continue;
+            }
+            bool i_final = false, j_final = false;
+            for (int f = 0; f < AF->num_final_states; f++) {
+                if (etats_sont_egaux(AF->final_states[f], AF->states[i])) i_final = true;
+                if (etats_sont_egaux(AF->final_states[f], AF->states[j])) j_final = true;
+            }
+            if (i_final != j_final) {
+                distinction[i][j] = distinction[j][i] = true;
+            }
+        }
+    }
+
+    bool changement;
+    do {
+        changement = false;
+        for (int i = 0; i < AF->num_states; i++) {
+            for (int j = i + 1; j < AF->num_states; j++) {
+                if (!distinction[i][j]) {
+                    for (int s = 0; s < AF->num_symbols; s++) {
+                        int dest_i[MAX_DESTINATIONS], dest_j[MAX_DESTINATIONS];
+                        int num_dest_i = 0, num_dest_j = 0;
+                        for (int t = 0; t < AF->num_transitions; t++) {
+                            if (AF->transitions[t].from[0] == i && AF->transitions[t].symbol == AF->symbols[s]) {
+                                memcpy(dest_i, AF->transitions[t].to, sizeof(int) * AF->transitions[t].num_destinations);
+                                num_dest_i = AF->transitions[t].num_destinations;
+                            }
+                            if (AF->transitions[t].from[0] == j && AF->transitions[t].symbol == AF->symbols[s]) {
+                                memcpy(dest_j, AF->transitions[t].to, sizeof(int) * AF->transitions[t].num_destinations);
+                                num_dest_j = AF->transitions[t].num_destinations;
+                            }
+                        }
+                        for (int x = 0; x < num_dest_i; x++) {
+                            for (int y = 0; y < num_dest_j; y++) {
+                                if (dest_i[x] == 9999 || dest_j[y] == 9999) continue;
+                                if (distinction[dest_i[x]][dest_j[y]]) {
+                                    distinction[i][j] = distinction[j][i] = true;
+                                    changement = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } while (changement);
+
+    int classe[MAX_STATES];
+    memset(classe, -1, sizeof(classe));
+    int nb_classes = 0;
+    for (int i = 0; i < AF->num_states; i++) {
+        if (classe[i] == -1) {
+            classe[i] = nb_classes;
+            for (int j = i + 1; j < AF->num_states; j++) {
+                if (!distinction[i][j]) {
+                    classe[j] = nb_classes;
+                }
+            }
+            nb_classes++;
+        }
+    }
+
+    Automate AF_min = {0};
+    AF_min.num_states = nb_classes;
+    AF_min.num_symbols = AF->num_symbols;
+    memcpy(AF_min.symbols, AF->symbols, sizeof(AF->symbols));
+
+    for (int t = 0; t < AF->num_transitions; t++) {
+        int from = classe[AF->transitions[t].from[0]];
+        char symbol = AF->transitions[t].symbol;
+        Transition new_transition = { .from = {from}, .num_depart = 1, .symbol = symbol, .num_destinations = 0 };
+        for (int d = 0; d < AF->transitions[t].num_destinations; d++) {
+            int to = classe[AF->transitions[t].to[d]];
+            if (to == 9999) continue;
+            bool existe = false;
+            for (int k = 0; k < new_transition.num_destinations; k++) {
+                if (new_transition.to[k] == to) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                new_transition.to[new_transition.num_destinations++] = to;
+            }
+        }
+        AF_min.transitions[AF_min.num_transitions++] = new_transition;
+    }
+
+    AF_min.num_initial_states = 0;
+    for (int i = 0; i < AF->num_initial_states; i++) {
+        int classe_init = classe[AF->initial_states[i].inter_states[0]];
+        if (classe_init == 9999) continue;
+        AF_min.initial_states[AF_min.num_initial_states++] = (States) { .inter_states = {classe_init}, .num_inter_states = 1 };
+    }
+
+    AF_min.num_final_states = 0;
+    for (int i = 0; i < AF->num_final_states; i++) {
+        int classe_finale = classe[AF->final_states[i].inter_states[0]];
+        if (classe_finale == 9999) continue;
+        bool deja_ajoute = false;
+        for (int j = 0; j < AF_min.num_final_states; j++) {
+            if (AF_min.final_states[j].inter_states[0] == classe_finale) {
+                deja_ajoute = true;
+                break;
+            }
+        }
+        if (!deja_ajoute) {
+            AF_min.final_states[AF_min.num_final_states++] = (States) { .inter_states = {classe_finale}, .num_inter_states = 1 };
+        }
+    }
+
+    memcpy(AF, &AF_min, sizeof(Automate));
+    printf("Automate minimisé avec succès !\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void rendre_deterministe_asynchrone(Automate *AF) {
+    Automate AFD;
+    AFD.num_transitions = 0;
+    AFD.num_states = 0;
+    AFD.num_symbols = AF->num_symbols;
+    memcpy(AFD.symbols, AF->symbols, sizeof(AF->symbols));
+
+    // Création du premier état déterministe (ensemble des états initiaux)
+    States initial;
+    initial.num_inter_states = 0;
+    for (int i = 0; i < AF->num_initial_states; i++) {
+        initial.inter_states[initial.num_inter_states++] = AF->initial_states[i].inter_states[0];
+    }
+    AFD.states[0] = initial;
+    AFD.num_states = 1;
+    AFD.initial_states[0] = initial;
+    AFD.num_initial_states = 1;
+
+    int index = 1; // Indice des nouveaux états créés
+    int count = 0; // Indice de l’état en cours de traitement
+
+    while (count < index) {
+        States current_state = AFD.states[count];
+
+        // Fusionner les transitions des anciens états du groupe
+        for (int i = 0; i < AF->num_symbols; i++) {
+            char symbole = AF->symbols[i];
+            if (symbole == 'E') continue; // Les transitions 'E' sont ignorées pour la création des nouvelles transitions
+
+            States nouvel_etat;
+            nouvel_etat.num_inter_states = 0;
+
+            // Fusionner toutes les destinations des états regroupés
+            for (int j = 0; j < current_state.num_inter_states; j++) {
+                int etat = current_state.inter_states[j];
+
+                for (int t = 0; t < AF->num_transitions; t++) {
+                    if (AF->transitions[t].from[0] == etat && AF->transitions[t].symbol == symbole) {
+                        for (int d = 0; d < AF->transitions[t].num_destinations; d++) {
+                            int destination = AF->transitions[t].to[d];
+                            // Ajouter la destination si elle n'est pas déjà présente
+                            bool deja_present = false;
+                            for (int x = 0; x < nouvel_etat.num_inter_states; x++) {
+                                if (nouvel_etat.inter_states[x] == destination) {
+                                    deja_present = true;
+                                    break;
+                                }
+                            }
+                            if (!deja_present) {
+                                nouvel_etat.inter_states[nouvel_etat.num_inter_states++] = destination;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Trier les états pour garantir l'ordre cohérent
+            for (int x = 0; x < nouvel_etat.num_inter_states - 1; x++) {
+                for (int y = x + 1; y < nouvel_etat.num_inter_states; y++) {
+                    if (nouvel_etat.inter_states[x] > nouvel_etat.inter_states[y]) {
+                        int temp = nouvel_etat.inter_states[x];
+                        nouvel_etat.inter_states[x] = nouvel_etat.inter_states[y];
+                        nouvel_etat.inter_states[y] = temp;
+                    }
+                }
+            }
+
+            // Vérifier si ce nouvel ensemble d’états existe déjà
+            int index_nouvel_etat = -1;
+            for (int k = 0; k < AFD.num_states; k++) {
+                if (etat_existe(&AFD.states[k], 1, nouvel_etat)) {
+                    index_nouvel_etat = k;
+                    break;
+                }
+            }
+
+            if (index_nouvel_etat == -1) {
+                // Ajout du nouvel état
+                AFD.states[index] = nouvel_etat;
+                index_nouvel_etat = index;
+                index++;
+                AFD.num_states++;
+            }
+
+            // Création de la transition fusionnée vers le nouvel ensemble d’états
+            Transition new_transition;
+            new_transition.from[0] = count;
+            new_transition.num_depart = 1;
+            new_transition.symbol = symbole;
+            for (int x = 0; x < nouvel_etat.num_inter_states; x++) {
+                new_transition.to[x] = nouvel_etat.inter_states[x];
+            }
+            new_transition.num_destinations = nouvel_etat.num_inter_states;
+            AFD.transitions[AFD.num_transitions++] = new_transition;
+        }
+
+        // Gestion des transitions asynchrones 'E' pour la fusion des états
+        for (int i = 0; i < AF->num_transitions; i++) {
+            if (AF->transitions[i].symbol == 'E') {
+                for (int j = 0; j < AF->transitions[i].num_destinations; j++) {
+                    int etat_dest = AF->transitions[i].to[j];
+
+                    // Fusionner l'état atteint par 'E' avec les états des ensembles actuels
+                    for (int k = 0; k < AFD.num_states; k++) {
+                        for (int m = 0; m < AFD.states[k].num_inter_states; m++) {
+                            if (AFD.states[k].inter_states[m] == etat_dest) {
+                                // Ajouter les états atteints par 'E' à la fusion
+                                States merged_state = AFD.states[k];
+                                for (int p = 0; p < AFD.num_states; p++) {
+                                    if (!etat_existe(AFD.states, AFD.num_states, merged_state)) {
+                                        AFD.states[AFD.num_states++] = merged_state;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        count++;
+    }
+
+    // Définition des états finaux
+    AFD.num_final_states = 0;
+    for (int i = 0; i < AFD.num_states; i++) {
+        for (int j = 0; j < AFD.states[i].num_inter_states; j++) {
+            for (int f = 0; f < AF->num_final_states; f++) {
+                if (AFD.states[i].inter_states[j] == AF->final_states[f].inter_states[0]) {
+                    AFD.final_states[AFD.num_final_states++] = AFD.states[i];
+                    break;
+                }
+            }
+        }
+    }
+
+    // Mise à jour de l’automate original avec l’AFD
+    memcpy(AF, &AFD, sizeof(Automate));
+    AF->a_ete_rendu_deterministe = true;
 }

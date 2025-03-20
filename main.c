@@ -21,11 +21,11 @@ int main() {
         printf("\nVoila l'automate numero %d :\n\n", num_automate);
         afficher_automate(&AF);
         printf("\n\nL'automate est :");
-        if(est_deterministe(&AF)) printf("\n  - Deterministe");
+        if(est_deterministe(&AF)) printf("\n   - Deterministe");
         else printf("\n   - Non deterministe");
         if(est_standard(&AF)) printf("\n   - Standard");
         else printf("\n   - Non Standard");
-        if(est_complet(&AF)) printf("\n  - Complet");
+        if(est_complet(&AF)) printf("\n   - Complet");
         else printf("\n   - Non Complet");
 
         bool inter_end = false;

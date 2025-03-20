@@ -72,16 +72,20 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
 }
 
 void afficher_automate(Automate *AF) {
+    int p_dix = 1;
+    int p_dix2 = 1;
     int max_dest = 1;
     for(int k = 0; k < AF->num_transitions; k++){
         if(AF->transitions[k].num_destinations > max_dest){
             max_dest = AF->transitions[k].num_destinations;
+            if(max_dest > 10) p_dix = 2;
         }
     }
     int max_inter_states = 0;
     for(int k = 0; k < AF->num_states; k++){
         if(AF->states[k].num_inter_states > max_inter_states){
             max_inter_states = AF->states[k].num_inter_states;
+            if(max_inter_states > 10) p_dix2 = 2;
         }
     }
     int col_width = 1 + (max_dest * 2); // Largeur dynamique
@@ -92,7 +96,7 @@ void afficher_automate(Automate *AF) {
     for (int i = 0; i < state_col_width*2 + max_inter_states*2; i++) printf("-");
     printf("+");
     for (int i = 0; i < AF->num_symbols; i++) {
-        for (int j = 0; j < col_width; j++) printf("-");
+        for (int j = 0; j < col_width*p_dix; j++) printf("-");
         printf("+");
     }
     printf("\n");
@@ -107,7 +111,7 @@ void afficher_automate(Automate *AF) {
 
     // Ligne de séparation horizontale
     printf("+");
-    for (int i = 0; i < state_col_width+1; i++) printf("-");
+    for (int i = 0; i < state_col_width+1 ; i++) printf("-");
     printf("+");
     for (int i = 0; i < max_inter_states*2 +1; i++) printf("-");
     printf("+");

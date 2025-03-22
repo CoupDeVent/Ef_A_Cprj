@@ -485,7 +485,7 @@ bool reconnaitre_mot(Automate *AF, const char *mot) {
     return false;
 }
 
-bool etats_sont_egaux(States a, States b) { // regarde si les deux etats donnés en entré sont égaux
+bool etats_sont_egaux(States a, States b) { // regarde si les deux etats donnés en entrée sont égaux
     if (a.num_inter_states != b.num_inter_states) {
         return false;
     }
@@ -557,7 +557,7 @@ void fermeture_epsilon(Automate *AF, States *fermeture, int etat) {
     }
 }
 
-// Fonction pour construire un automate sans epsilon-transitions
+// Fonction pour construire un automate sans epsilon transitions
 void eliminer_transitions_epsilon(Automate *AF, Automate *AF_synchrone) {
     memcpy(AF_synchrone, AF, sizeof(Automate));
     AF_synchrone->num_transitions = 0;
@@ -637,7 +637,7 @@ void enlever_colonne_E(Automate *AF) {
     }
 }
 
-// Fonction pour rendre un automate déterministe après suppression des epsilon-transitions
+// Fonction pour rendre un automate déterministe après suppression des epsilon transitions
 void rendre_deterministe_asynchrone(Automate *AF) {
     Automate AF_synchrone;
     eliminer_transitions_epsilon(AF, &AF_synchrone);

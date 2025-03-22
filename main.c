@@ -88,26 +88,26 @@ int main() {
                     scanf("%d", &num_mot_reco);
 
                     char mots[255][255];
-                    for(int k = 0; k < num_mot_reco; k++){
-                        if(k==0){
-                            printf("\nEntrer le 1er mot : ");
+                    for(int k = 1; k < num_mot_reco+1; k++){
+                        if(k==1){
+                            printf("\nEntrer le 1er mot :");
                             scanf("%s", mots[k]);
                         }
                         else {
-                            printf("\nEntrer le %deme mot : ", k);
+                            printf("Entrer le %deme mot : ", k);
                             scanf("%s", mots[k]);
                         }
                     }
 
                     printf("\n");
 
-                    for(int k = 0; k < num_mot_reco; k++){
-                        if(k==0){
-                            if(reconnaitre_mot(&AF, mots[k])) printf("\n\nLe 1er mot est reconnu");
+                    for(int k = 1; k < num_mot_reco+1; k++){
+                        if(k==1){
+                            if(reconnaitre_mot(&AF, mots[k])) printf("\nLe 1er mot est reconnu");
                             else printf("\nLe 1er mot n'est pas reconnu");
                         }
                         else{
-                            if(reconnaitre_mot(&AF, mots[k])) printf("\n\nLe %deme mot est reconnu", k);
+                            if(reconnaitre_mot(&AF, mots[k])) printf("\nLe %deme mot est reconnu", k);
                             else printf("\nLe %deme mot n'est pas reconnu", k);
                         }
                     }

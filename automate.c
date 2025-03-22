@@ -19,38 +19,42 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
          3 c 1 4
          4 a 1 2
          4 c 0
+
+
+        Si le symbole est 'E' = Epsilon
+        Si l'état est 9999 = état puits
      */
-    AF->a_ete_rendu_deterministe = false; // cas ou l'automate a deja été déterminisé (manuellement mit a 1 a la fin de la fonction rendre_détermine) car les destinations des transitions sont noté {0,1} avec des ','.
+    AF->a_ete_rendu_deterministe = false; // cas où l'automate a deja été déterminisé (manuellement mit a 1 a la fin de la fonction rendre_détermine) car les destinations des transitions sont noté {0,1} avec des ','.
     FILE *file = fopen(nom_fichier, "r");
     if (!file) {
         printf("Erreur: Impossible d'ouvrir le fichier %s\n", nom_fichier);
         exit(EXIT_FAILURE);
     }
 
-    // stockage des symbole et de leur nombre
+    // stockage des symboles et de leur nombre
     fscanf(file, "%d", &AF->num_symbols);
     for (int i = 0; i < AF->num_symbols; i++) {
         fscanf(file, " %c", &AF->symbols[i]);
     }
 
-    // stockage du nombre d'état
+    // stockage du nombre d'états
     fscanf(file, "%d", &AF->num_states);
 
-    // stockage des états initiaux et de leurs nombre
+    // stockage des états initiaux et de leurs nombres
     fscanf(file, "%d", &AF->num_initial_states);
     for (int i = 0; i < AF->num_initial_states; i++) {
         fscanf(file, "%d", &AF->initial_states[i].inter_states[0]);
         AF->initial_states[i].num_inter_states = 1;
     }
 
-    // stockage des états finaux et de leurs nombre
+    // stockage des états finaux et de leurs nombres
     fscanf(file, "%d", &AF->num_final_states);
     for (int i = 0; i < AF->num_final_states; i++) {
         fscanf(file, "%d", &AF->final_states[i].inter_states[0]);
         AF->final_states[i].num_inter_states = 1;
     }
 
-    // stockage des transition et de leurs nombre
+    // stockage des transitions et de leurs nombres
     fscanf(file, "%d", &AF->num_transitions);
     for (int i = 0; i < AF->num_transitions; i++) {
         int from, num_to, to;
@@ -68,7 +72,7 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
         }
     }
 
-    // stockage des état en fonction des départs des transitions
+    // stockage des états en fonction des départs des transitions
     for(int i = 0; i < AF->num_states; i++){
         memcpy(AF->states[i].inter_states, AF->transitions[i*AF->num_symbols].from, sizeof(int) * MAX_DEPART);
         AF->states[i].num_inter_states = AF->transitions[i*AF->num_symbols].num_depart;

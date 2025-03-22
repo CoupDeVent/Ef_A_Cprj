@@ -56,7 +56,8 @@ int main() {
                     break;
                 }
                 case 2:{
-                    if(est_deterministe(&AF)) printf("\nL'automate est deja deterministe.");
+                    if (!est_complet(&AF)) rendre_complet(&AF);
+                    if (est_deterministe(&AF)) printf("\nL'automate est deja deterministe.");
                     else{
                         if(num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
                             rendre_deterministe_asynchrone(&AF);

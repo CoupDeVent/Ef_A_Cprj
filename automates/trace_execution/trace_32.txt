@@ -1,0 +1,264 @@
+C:\Users\safio\CLionProjects\projetautomate\main.exe
+Quel automate voulez-vous etudier ?
+32
+
+
+Voila l'automate numero 32 :
+
++--------+-----+-----+-----+-----+
+|        | a   | b   | c   | E   |
++----+---+-----+-----+-----+-----+
+| E  | 0 | -   | -   | -   | 1,10 |
++----+---+-----+-----+-----+-----+
+|    | 1 | -   | -   | -   | 2,6 |
++----+---+-----+-----+-----+-----+
+|    | 2 | -   | -   | -   | 3,5 |
++----+---+-----+-----+-----+-----+
+|    | 3 | -   | 4   | -   | -   |
++----+---+-----+-----+-----+-----+
+|    | 4 | -   | -   | -   | 3,5 |
++----+---+-----+-----+-----+-----+
+|    | 5 | -   | -   | -   | 8   |
++----+---+-----+-----+-----+-----+
+|    | 6 | 7   | -   | -   | -   |
++----+---+-----+-----+-----+-----+
+|    | 7 | -   | -   | -   | 8   |
++----+---+-----+-----+-----+-----+
+|    | 8 | -   | -   | 9   | -   |
++----+---+-----+-----+-----+-----+
+|    | 9 | -   | -   | -   | 21   |
++----+---+-----+-----+-----+-----+
+|    | 10 | -   | -   | 10   | 11,15 |
++----+---+-----+-----+-----+-----+
+|    | 11 | -   | -   | -   | 12,14 |
++----+---+-----+-----+-----+-----+
+|    | 12 | 13   | -   | -   | -   |
++----+---+-----+-----+-----+-----+
+|    | 13 | -   | -   | -   | 14   |
++----+---+-----+-----+-----+-----+
+|    | 14 | -   | -   | -   | 17   |
++----+---+-----+-----+-----+-----+
+|    | 15 | -   | 16   | -   | -   |
++----+---+-----+-----+-----+-----+
+|    | 16 | -   | -   | -   | 17   |
++----+---+-----+-----+-----+-----+
+|    | 17 | -   | -   | -   | 18,20 |
++----+---+-----+-----+-----+-----+
+|    | 18 | -   | -   | 19   | -   |
++----+---+-----+-----+-----+-----+
+|    | 19 | -   | -   | -   | 20   |
++----+---+-----+-----+-----+-----+
+|    | 20 | -   | -   | -   | 21   |
++----+---+-----+-----+-----+-----+
+| S  | 21 | -   | -   | -   | -   |
++----+---+-----+-----+-----+-----+
+
+
+L'automate est :
+   - Non deterministe
+   - Standard
+   - Non Complet
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.
+3
+
+
+L'automate a ete rendu complet :
++--------+-----+-----+-----+-----+
+|        | a   | b   | c   | E   |
++----+---+-----+-----+-----+-----+
+| E  | 0 | P   | P   | P   | 1,10 |
++----+---+-----+-----+-----+-----+
+|    | 1 | P   | P   | P   | 2,6 |
++----+---+-----+-----+-----+-----+
+|    | 2 | P   | P   | P   | 3,5 |
++----+---+-----+-----+-----+-----+
+|    | 3 | P   | 4   | P   | P   |
++----+---+-----+-----+-----+-----+
+|    | 4 | P   | P   | P   | 3,5 |
++----+---+-----+-----+-----+-----+
+|    | 5 | P   | P   | P   | 8   |
++----+---+-----+-----+-----+-----+
+|    | 6 | 7   | P   | P   | P   |
++----+---+-----+-----+-----+-----+
+|    | 7 | P   | P   | P   | 8   |
++----+---+-----+-----+-----+-----+
+|    | 8 | P   | P   | 9   | P   |
++----+---+-----+-----+-----+-----+
+|    | 9 | P   | P   | P   | 21   |
++----+---+-----+-----+-----+-----+
+|    | 10 | P   | P   | 10   | 11,15 |
++----+---+-----+-----+-----+-----+
+|    | 11 | P   | P   | P   | 12,14 |
++----+---+-----+-----+-----+-----+
+|    | 12 | 13   | P   | P   | P   |
++----+---+-----+-----+-----+-----+
+|    | 13 | P   | P   | P   | 14   |
++----+---+-----+-----+-----+-----+
+|    | 14 | P   | P   | P   | 17   |
++----+---+-----+-----+-----+-----+
+|    | 15 | P   | 16   | P   | P   |
++----+---+-----+-----+-----+-----+
+|    | 16 | P   | P   | P   | 17   |
++----+---+-----+-----+-----+-----+
+|    | 17 | P   | P   | P   | 18,20 |
++----+---+-----+-----+-----+-----+
+|    | 18 | P   | P   | 19   | P   |
++----+---+-----+-----+-----+-----+
+|    | 19 | P   | P   | P   | 20   |
++----+---+-----+-----+-----+-----+
+|    | 20 | P   | P   | P   | 21   |
++----+---+-----+-----+-----+-----+
+| S  | 21 | P   | P   | P   | P   |
++----+---+-----+-----+-----+-----+
+|    | P | P   | P   | P   | P   |
++----+---+-----+-----+-----+-----+
+
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.
+2
+
+
+L'automate a ete rendu deterministe :
++--------------+---------+---------+---------+
+|              | a       | b       | c       |
++----+---------+---------+---------+---------+
+| E  | 0       | P,7,13   | P,4,16   | P,9,10,19 |
++----+---------+---------+---------+---------+
+|    | P,7,13   | P       | P       | P,9,19   |
++----+---------+---------+---------+---------+
+|    | P,4,16   | P       | P,4     | P,9,19   |
++----+---------+---------+---------+---------+
+|    | P,9,10,19 | P,13     | P,16     | P,10,19   |
++----+---------+---------+---------+---------+
+|    | P       | -       | -       | -       |
++----+---------+---------+---------+---------+
+|    | P,9,19   | P       | P       | P       |
++----+---------+---------+---------+---------+
+|    | P,4     | P       | P,4     | P,9     |
++----+---------+---------+---------+---------+
+|    | P,13     | P       | P       | P,19     |
++----+---------+---------+---------+---------+
+|    | P,16     | P       | P       | P,19     |
++----+---------+---------+---------+---------+
+|    | P,10,19   | P,13     | P,16     | 10,P,19   |
++----+---------+---------+---------+---------+
+|    | P,9     | P       | P       | P       |
++----+---------+---------+---------+---------+
+|    | P,19     | P       | P       | P       |
++----+---------+---------+---------+---------+
+|    | 10,P,19   | P,13     | P,16     | 10,P,19   |
++----+---------+---------+---------+---------+
+
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.
+5
+
+
+Combien de mot voulez vous reconnaitre :1
+
+
+Entrer le 1er mot :ab
+
+
+
+Le 1er mot n'est pas reconnu
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.
+4
+
+
+Voici l'automate complementaire :
++--------------+---------+---------+---------+
+|              | a       | b       | c       |
++----+---------+---------+---------+---------+
+| ES | 0       | P,7,13   | P,4,16   | P,9,10,19 |
++----+---------+---------+---------+---------+
+| S  | P,7,13   | P       | P       | P,9,19   |
++----+---------+---------+---------+---------+
+| S  | P,4,16   | P       | P,4     | P,9,19   |
++----+---------+---------+---------+---------+
+| S  | P,9,10,19 | P,13     | P,16     | P,10,19   |
++----+---------+---------+---------+---------+
+| S  | P       | -       | -       | -       |
++----+---------+---------+---------+---------+
+| S  | P,9,19   | P       | P       | P       |
++----+---------+---------+---------+---------+
+| S  | P,4     | P       | P,4     | P,9     |
++----+---------+---------+---------+---------+
+| S  | P,13     | P       | P       | P,19     |
++----+---------+---------+---------+---------+
+| S  | P,16     | P       | P       | P,19     |
++----+---------+---------+---------+---------+
+| S  | P,10,19   | P,13     | P,16     | 10,P,19   |
++----+---------+---------+---------+---------+
+| S  | P,9     | P       | P       | P       |
++----+---------+---------+---------+---------+
+| S  | P,19     | P       | P       | P       |
++----+---------+---------+---------+---------+
+| S  | 10,P,19   | P,13     | P,16     | 10,P,19   |
++----+---------+---------+---------+---------+
+
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.
+5
+
+
+Combien de mot voulez vous reconnaitre :1
+
+
+Entrer le 1er mot :ab
+
+
+
+Le 1er mot n'est pas reconnu
+
+Que voulez vous faire ?
+    1- Rendre standard l'automate si il ne l'est pas deja.
+    2- Rendre deterministe l'automate si il ne l'est pas deja.
+    3- Rendre complet l'automate si il ne l'est pas deja.
+    4- Rendre complementaire l'automate.
+    5- Reconnaitre un mot dans l'automate.
+    6- Afficher l'automate.
+    7- Reinitialise l'automate.
+    8- Quitter.

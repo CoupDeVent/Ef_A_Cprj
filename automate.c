@@ -702,6 +702,11 @@ void rendre_deterministe_asynchrone(Automate *AF) {
                 new_transition.to[x] = nouvel_etat.inter_states[x];
             }
             new_transition.num_destinations = nouvel_etat.num_inter_states;
+            if (nouvel_etat.inter_states[0] == 9999 && new_transition.num_destinations == 0) {
+                new_transition.from[0] = 9999;
+                new_transition.to[0] = 9999;
+                new_transition.num_destinations = 1;
+            }
             AFD.transitions[AFD.num_transitions++] = new_transition;
         }
         count++;

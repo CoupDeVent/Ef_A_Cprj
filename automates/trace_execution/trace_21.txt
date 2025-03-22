@@ -1,9 +1,4 @@
-C:\Users\safio\CLionProjects\projetautomate\main.exe
-Quel automate voulez-vous etudier ?
-21
-
-
-Voila l'automate numero 21 :
+Automate numéro 21 :
 
 +--------+---+---+---+---+
 |        | a | b | c | d |
@@ -21,21 +16,10 @@ Voila l'automate numero 21 :
 L'automate est :
    - Deterministe
    - Non Standard
-   - Complet
+   - Non Complet
 
-Que voulez vous faire ?
-    1- Rendre standard l'automate si il ne l'est pas deja.
-    2- Rendre deterministe l'automate si il ne l'est pas deja.
-    3- Rendre complet l'automate si il ne l'est pas deja.
-    4- Rendre complementaire l'automate.
-    5- Reconnaitre un mot dans l'automate.
-    6- Afficher l'automate.
-    7- Reinitialise l'automate.
-    8- Quitter.
-1
+L'Automate Standard :
 
-
-L'automate a ete rendu standard :
 +--------+---+---+---+---+
 |        | a | b | c | d |
 +----+---+---+---+---+---+
@@ -47,86 +31,51 @@ L'automate a ete rendu standard :
 +----+---+---+---+---+---+
 |    | 3 | - | - | 0 | - |
 +----+---+---+---+---+---+
-| E  | 4 | - | 0 | 0 | - |
+| E  | 4 | 2 | - | - | 5 |
 +----+---+---+---+---+---+
 
 
-Que voulez vous faire ?
-    1- Rendre standard l'automate si il ne l'est pas deja.
-    2- Rendre deterministe l'automate si il ne l'est pas deja.
-    3- Rendre complet l'automate si il ne l'est pas deja.
-    4- Rendre complementaire l'automate.
-    5- Reconnaitre un mot dans l'automate.
-    6- Afficher l'automate.
-    7- Reinitialise l'automate.
-    8- Quitter.
-5
+L'Automate Complete :
 
-
-Combien de mot voulez vous reconnaitre :1
-
-
-Entrer le 1er mot :ab
-
-
-
-Le 1er mot n'est pas reconnu
-
-Que voulez vous faire ?
-    1- Rendre standard l'automate si il ne l'est pas deja.
-    2- Rendre deterministe l'automate si il ne l'est pas deja.
-    3- Rendre complet l'automate si il ne l'est pas deja.
-    4- Rendre complementaire l'automate.
-    5- Reconnaitre un mot dans l'automate.
-    6- Afficher l'automate.
-    7- Reinitialise l'automate.
-    8- Quitter.
-4
-
-
-Voici l'automate complementaire :
 +--------+---+---+---+---+
 |        | a | b | c | d |
 +----+---+---+---+---+---+
-| S  | 0 | - | - | - | 1 |
+|    | 0 | P | P | P | 1 |
 +----+---+---+---+---+---+
-|    | 1 | 2 | - | - | - |
+| ES | 1 | 2 | P | P | P |
 +----+---+---+---+---+---+
-| S  | 2 | - | 3 | - | - |
+|    | 2 | P | 3 | P | P |
 +----+---+---+---+---+---+
-| S  | 3 | - | - | 0 | - |
+|    | 3 | P | P | 0 | P |
 +----+---+---+---+---+---+
-| ES | 4 | - | 0 | 0 | - |
+|    | P | P | P | P | P |
 +----+---+---+---+---+---+
 
 
-Que voulez vous faire ?
-    1- Rendre standard l'automate si il ne l'est pas deja.
-    2- Rendre deterministe l'automate si il ne l'est pas deja.
-    3- Rendre complet l'automate si il ne l'est pas deja.
-    4- Rendre complementaire l'automate.
-    5- Reconnaitre un mot dans l'automate.
-    6- Afficher l'automate.
-    7- Reinitialise l'automate.
-    8- Quitter.
-5
+Reconaissance de mots :
+    - Le mot numéro 0 est a et n'est pas reconnu.
+    - Le mot numéro 1 est b et n'est pas reconnu.
+    - Le mot numéro 2 est ab et n'est pas reconnu.
+    - Le mot numéro 3 est aa et n'est pas reconnu.
+    - Le mot numéro 4 est abc et n'est pas reconnu.
+    - Le mot numéro 5 est aaa et n'est pas reconnu.
+    - Le mot numéro 6 est abcd et est reconnu.
+    - Le mot numéro 7 est abab et n'est pas reconnu.
+    - Le mot numéro 8 est acbd et n'est pas reconnu.
+    - Le mot numéro 9 est bbcc et n'est pas reconnu.
 
+L'Automate Complémentaire :
 
-Combien de mot voulez vous reconnaitre :1
-
-
-Entrer le 1er mot :ab
-
-
-
-Le 1er mot n'est pas reconnu
-
-Que voulez vous faire ?
-    1- Rendre standard l'automate si il ne l'est pas deja.
-    2- Rendre deterministe l'automate si il ne l'est pas deja.
-    3- Rendre complet l'automate si il ne l'est pas deja.
-    4- Rendre complementaire l'automate.
-    5- Reconnaitre un mot dans l'automate.
-    6- Afficher l'automate.
-    7- Reinitialise l'automate.
-    8- Quitter.
++--------+---+---+---+---+
+|        | a | b | c | d |
++----+---+---+---+---+---+
+| S  | 0 | P | P | P | 1 |
++----+---+---+---+---+---+
+| E  | 1 | 2 | P | P | P |
++----+---+---+---+---+---+
+| S  | 2 | P | 3 | P | P |
++----+---+---+---+---+---+
+| S  | 3 | P | P | 0 | P |
++----+---+---+---+---+---+
+| S  | P | P | P | P | P |
++----+---+---+---+---+---+

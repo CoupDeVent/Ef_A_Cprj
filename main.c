@@ -2,11 +2,123 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "automate.h"
 #include "automate.c"
 
 int main() {
+    /*
+    FILE *fichier;
+    int saved_stdout = dup(STDOUT_FILENO);  // Sauvegarde la sortie standard
+    Automate AF;
+
+    if (saved_stdout == -1) {
+        perror("Erreur de sauvegarde de stdout");
+        return 1;
+    }
+
+    for (int num_automate = 1; num_automate < 45; num_automate++) {
+        char nom_fichier[27];
+        if(num_automate < 10) snprintf(nom_fichier, 27, "automates/automate_0%d.txt", num_automate);
+        else snprintf(nom_fichier, 27, "automates/automate_%d.txt", num_automate);
+
+        char nom_fichier_trace[39];
+        if(num_automate < 10) snprintf(nom_fichier_trace, 39, "automates/trace_execution/trace_0%d.txt", num_automate);
+        else snprintf(nom_fichier_trace, 39, "automates/trace_execution/trace_%d.txt", num_automate);
+
+        fichier = fopen(nom_fichier_trace, "w");
+        if (!fichier) {
+            perror("Erreur ouverture fichier");
+            return 1;
+        }
+
+        // Rediriger stdout vers le fichier
+        if (dup2(fileno(fichier), STDOUT_FILENO) == -1) {
+            perror("Erreur de redirection de stdout vers le fichier");
+            fclose(fichier);
+            return 1;
+        }
+
+        // Initialiser l'automate et lire depuis le fichier
+        AF.a_ete_rendu_deterministe = false;
+        lire_automate_sur_fichier(nom_fichier, &AF);
+
+        // Afficher les informations sur l'automate
+        printf("Automate numéro %d :\n\n", num_automate);
+        afficher_automate(&AF);
+
+        printf("\n\nL'automate est :");
+        if (est_deterministe(&AF)) printf("\n   - Deterministe");
+        else printf("\n   - Non deterministe");
+        if (est_standard(&AF)) printf("\n   - Standard");
+        else printf("\n   - Non Standard");
+        if (est_complet(&AF)) printf("\n   - Complet");
+        else printf("\n   - Non Complet");
+
+        if (!est_standard(&AF)) {
+            printf("\n\nL'Automate Standard :\n\n");
+            rendre_standard(&AF);
+            afficher_automate(&AF);
+            lire_automate_sur_fichier(nom_fichier, &AF);
+        }
+
+        if (!est_complet(&AF)) {
+            printf("\n\nL'Automate Complete :\n\n");
+            rendre_complet(&AF);
+            afficher_automate(&AF);
+            lire_automate_sur_fichier(nom_fichier, &AF);
+        }
+
+        if (!est_deterministe(&AF)) {
+            printf("\n\nL'Automate Deterministe :\n\n");
+            if (num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
+                rendre_deterministe_asynchrone(&AF);
+            }
+            else rendre_deterministe(&AF);
+            afficher_automate(&AF);
+            lire_automate_sur_fichier(nom_fichier, &AF);
+        }
+
+        printf("\n\nReconaissance de mots :");
+        char test_words[10][5] = {
+            "a", "b", "ab", "aa", "abc", "aaa", "abcd", "abab", "acbd", "bbcc"
+        };
+        for (int i = 0; i < 10; i++) {
+            printf("\n    - Le mot numéro %d est %s", i, test_words[i]);
+            if (reconnaitre_mot(&AF, test_words[i])) printf(" et est reconnu.");
+            else printf(" et n'est pas reconnu.");
+        }
+
+        printf("\n\nL'Automate Complémentaire :\n\n");
+        if (!est_deterministe(&AF)) {
+            if (num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35) {
+                rendre_deterministe_asynchrone(&AF);
+            }
+            else rendre_deterministe(&AF);
+        }
+        if (!est_complet(&AF)) rendre_complet(&AF);
+        complementaire_automate(&AF);
+        afficher_automate(&AF);
+        lire_automate_sur_fichier(nom_fichier, &AF);
+
+        fflush(stdout);  // Assure que tout est bien écrit dans le fichier
+
+        // Restaurer stdout vers la console
+        if (dup2(saved_stdout, STDOUT_FILENO) == -1) {
+            perror("Erreur de restauration de stdout");
+            fclose(fichier);
+            return 1;
+        }
+
+        // Fermer le fichier après chaque itération
+        fclose(fichier);
+    }
+
+    // Fermer la sauvegarde de stdout
+    close(saved_stdout);
+    */
+
     bool end = false;
     while(!end){
         Automate AF;
@@ -42,11 +154,10 @@ int main() {
             printf("\n    4- Rendre complementaire l'automate.");
             printf("\n    5- Reconnaitre un mot dans l'automate.");
             printf("\n    6- Afficher l'automate.");
-            printf("\n    7- Reinitialise l'automate.");
-            printf("\n    8- Quitter.");
+            printf("\n    7- Quitter.");
             printf("\n");
             int faire = -1;
-            while(faire < 1 || faire > 8){
+            while(faire < 1 || faire > 7){
                 scanf("%d", &faire);
             }
 
@@ -58,10 +169,10 @@ int main() {
                         printf("\nL'automate a ete rendu standard :\n");
                         afficher_automate(&AF);
                     }
+                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 2:{
-                    if (!est_complet(&AF)) rendre_complet(&AF);
                     if (est_deterministe(&AF)) printf("\nL'automate est deja deterministe.");
                     else{
                         if(num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
@@ -71,6 +182,7 @@ int main() {
                         printf("\nL'automate a ete rendu deterministe :\n");
                         afficher_automate(&AF);
                     }
+                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 3:{
@@ -80,12 +192,21 @@ int main() {
                         printf("\nL'automate a ete rendu complet :\n");
                         afficher_automate(&AF);
                     }
+                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 4:{
+                    if (!est_deterministe(&AF)) {
+                            if(num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
+                                rendre_deterministe_asynchrone(&AF);
+                            }
+                            else rendre_deterministe(&AF);
+                        }
+                    if (!est_complet(&AF)) rendre_complet(&AF);
                     complementaire_automate(&AF);
                     printf("\nVoici l'automate complementaire :\n");
                     afficher_automate(&AF);
+                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 5:{
@@ -117,6 +238,7 @@ int main() {
                             else printf("\nLe %deme mot n'est pas reconnu", k);
                         }
                     }
+                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 6:{
@@ -125,15 +247,12 @@ int main() {
                     break;
                 }
                 case 7:{
-                    lire_automate_sur_fichier(nom_fichier, &AF);
-                    break;
-                }
-                case 8:{
                     inter_end = true;
                     break;
                 }
             }
         }
     }
+
     return 0;
 }

@@ -78,7 +78,7 @@ int main() {
                 }
                 case 4:{
                     complementaire_automate(&AF);
-                    printf("\nVoici l'automate complémentaire :\n");
+                    printf("\nVoici l'automate complementaire :\n");
                     afficher_automate(&AF);
                     break;
                 }

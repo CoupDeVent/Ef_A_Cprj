@@ -245,6 +245,7 @@ bool est_standard(Automate *AF) {
 }
 
 bool est_complet(Automate *AF) {
+    if (est_deterministe(AF)) {return true;}
     // Vérifier que chaque état possède une transition pour chaque symbole de l'alphabet
     for (int k = 0; k < AF->num_transitions; k++){
         if(AF->transitions[k].num_destinations == 0) return false;

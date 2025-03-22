@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
 #include "automate.h"
 
 void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){

@@ -35,23 +35,6 @@ L'Automate Standard :
 +----+---+-----+-----+
 
 
-L'Automate Complete :
-
-+--------+-----+-----+
-|        | a   | b   |
-+----+---+-----+-----+
-| E  | 0 | 1   | 2   |
-+----+---+-----+-----+
-| ES | 1 | 1   | 2   |
-+----+---+-----+-----+
-|    | 2 | 0   | 1   |
-+----+---+-----+-----+
-| E  | 3 | 1,2 | P   |
-+----+---+-----+-----+
-|    | P | P   | P   |
-+----+---+-----+-----+
-
-
 L'Automate Deterministe :
 
 +------------+-----+-----+
@@ -74,7 +57,7 @@ L'Automate Deterministe :
 Reconaissance de mots :
     - Le mot numéro 0 est a et est reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
-    - Le mot numéro 2 est ab et n'est pas reconnu.
+    - Le mot numéro 2 est ab et est reconnu.
     - Le mot numéro 3 est aa et est reconnu.
     - Le mot numéro 4 est abc et n'est pas reconnu.
     - Le mot numéro 5 est aaa et est reconnu.

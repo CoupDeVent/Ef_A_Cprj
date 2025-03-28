@@ -44,12 +44,12 @@ L'Automate Deterministe :
 
 
 Reconaissance de mots :
-    - Le mot numéro 0 est a et n'est pas reconnu.
+    - Le mot numéro 0 est a et est reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
     - Le mot numéro 2 est ab et n'est pas reconnu.
     - Le mot numéro 3 est aa et est reconnu.
     - Le mot numéro 4 est abc et n'est pas reconnu.
-    - Le mot numéro 5 est aaa et n'est pas reconnu.
+    - Le mot numéro 5 est aaa et est reconnu.
     - Le mot numéro 6 est abcd et n'est pas reconnu.
     - Le mot numéro 7 est abab et n'est pas reconnu.
     - Le mot numéro 8 est acbd et n'est pas reconnu.

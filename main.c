@@ -8,7 +8,6 @@
 #include "automate.c"
 
 int main() {
-    /*
     FILE *fichier;
     int saved_stdout = dup(STDOUT_FILENO);  // Sauvegarde la sortie standard
     Automate AF;
@@ -63,19 +62,18 @@ int main() {
             lire_automate_sur_fichier(nom_fichier, &AF);
         }
 
-        if (!est_complet(&AF)) {
-            printf("\n\nL'Automate Complete :\n\n");
-            rendre_complet(&AF);
-            afficher_automate(&AF);
-            lire_automate_sur_fichier(nom_fichier, &AF);
-        }
-
         if (!est_deterministe(&AF)) {
             printf("\n\nL'Automate Deterministe :\n\n");
             if (num_automate == 31 || num_automate == 32 || num_automate == 33 || num_automate == 34 || num_automate == 35){
                 rendre_deterministe_asynchrone(&AF);
             }
             else rendre_deterministe(&AF);
+            afficher_automate(&AF);
+        }
+
+        if (!est_complet(&AF)) {
+            printf("\n\nL'Automate Complete :\n\n");
+            rendre_complet(&AF);
             afficher_automate(&AF);
             lire_automate_sur_fichier(nom_fichier, &AF);
         }
@@ -117,8 +115,9 @@ int main() {
 
     // Fermer la sauvegarde de stdout
     close(saved_stdout);
-    */
 
+
+    /*
     bool end = false;
     while(!end){
         Automate AF;
@@ -182,7 +181,6 @@ int main() {
                         printf("\nL'automate a ete rendu deterministe :\n");
                         afficher_automate(&AF);
                     }
-                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 3:{
@@ -253,6 +251,7 @@ int main() {
             }
         }
     }
+     */
 
     return 0;
 }

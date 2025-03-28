@@ -55,33 +55,6 @@ L'Automate Standard :
 +----+---+---+---+---+---+
 
 
-L'Automate Complete :
-
-+--------+---+---+---+---+
-|        | a | b | c | d |
-+----+---+---+---+---+---+
-| E  | 0 | P | P | P | 5 |
-+----+---+---+---+---+---+
-| E  | 1 | 2 | P | P | P |
-+----+---+---+---+---+---+
-|    | 2 | P | 3 | P | P |
-+----+---+---+---+---+---+
-|    | 3 | P | P | 4 | P |
-+----+---+---+---+---+---+
-|    | 4 | P | P | P | 5 |
-+----+---+---+---+---+---+
-| S  | 5 | P | P | P | P |
-+----+---+---+---+---+---+
-| E  | 6 | 2 | P | P | P |
-+----+---+---+---+---+---+
-| E  | 7 | P | 3 | P | P |
-+----+---+---+---+---+---+
-| E  | 8 | P | P | 4 | P |
-+----+---+---+---+---+---+
-|    | P | P | P | P | P |
-+----+---+---+---+---+---+
-
-
 L'Automate Deterministe :
 
 +----------------+---+---+---+---+
@@ -99,6 +72,25 @@ L'Automate Deterministe :
 +----+-----------+---+---+---+---+
 
 
+L'Automate Complete :
+
++----------------+---+---+---+---+
+|                | a | b | c | d |
++----+-----------+---+---+---+---+
+| E  | 1,6,7,8,0 | 2 | 3 | 4 | 5 |
++----+-----------+---+---+---+---+
+|    | 2         | P | 3 | P | P |
++----+-----------+---+---+---+---+
+|    | 3         | P | P | 4 | P |
++----+-----------+---+---+---+---+
+|    | 4         | P | P | P | 5 |
++----+-----------+---+---+---+---+
+| S  | 5         | P | P | P | P |
++----+-----------+---+---+---+---+
+|    | P         | P | P | P | P |
++----+-----------+---+---+---+---+
+
+
 Reconaissance de mots :
     - Le mot numéro 0 est a et n'est pas reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
@@ -107,7 +99,7 @@ Reconaissance de mots :
     - Le mot numéro 4 est abc et n'est pas reconnu.
     - Le mot numéro 5 est aaa et n'est pas reconnu.
     - Le mot numéro 6 est abcd et est reconnu.
-    - Le mot numéro 7 est abab et est reconnu.
+    - Le mot numéro 7 est abab et n'est pas reconnu.
     - Le mot numéro 8 est acbd et n'est pas reconnu.
     - Le mot numéro 9 est bbcc et n'est pas reconnu.
 

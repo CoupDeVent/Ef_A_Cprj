@@ -35,23 +35,6 @@ L'Automate Standard :
 +----+---+-------+-------+-------+-------+
 
 
-L'Automate Complete :
-
-+--------+-------+-------+-------+-------+
-|        | a     | b     | c     | d     |
-+----+---+-------+-------+-------+-------+
-|    | 0 | P     | P     | P     | 1     |
-+----+---+-------+-------+-------+-------+
-| ES | 1 | 0,2,3 | P     | P     | P     |
-+----+---+-------+-------+-------+-------+
-|    | 2 | P     | 3     | P     | P     |
-+----+---+-------+-------+-------+-------+
-|    | 3 | P     | P     | 0     | P     |
-+----+---+-------+-------+-------+-------+
-|    | P | P     | P     | P     | P     |
-+----+---+-------+-------+-------+-------+
-
-
 L'Automate Deterministe :
 
 +------------+-------+-------+-------+-------+
@@ -67,6 +50,23 @@ L'Automate Deterministe :
 +----+-------+-------+-------+-------+-------+
 
 
+L'Automate Complete :
+
++------------+-------+-------+-------+-------+
+|            | a     | b     | c     | d     |
++----+-------+-------+-------+-------+-------+
+| ES | 1     | 0,2,3 | P     | P     | P     |
++----+-------+-------+-------+-------+-------+
+|    | 0,2,3 | P     | 3     | 0     | 1     |
++----+-------+-------+-------+-------+-------+
+|    | 3     | P     | P     | 0     | P     |
++----+-------+-------+-------+-------+-------+
+|    | 0     | P     | P     | P     | 1     |
++----+-------+-------+-------+-------+-------+
+|    | P     | P     | P     | P     | P     |
++----+-------+-------+-------+-------+-------+
+
+
 Reconaissance de mots :
     - Le mot numéro 0 est a et n'est pas reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
@@ -74,9 +74,9 @@ Reconaissance de mots :
     - Le mot numéro 3 est aa et n'est pas reconnu.
     - Le mot numéro 4 est abc et n'est pas reconnu.
     - Le mot numéro 5 est aaa et n'est pas reconnu.
-    - Le mot numéro 6 est abcd et est reconnu.
+    - Le mot numéro 6 est abcd et n'est pas reconnu.
     - Le mot numéro 7 est abab et n'est pas reconnu.
-    - Le mot numéro 8 est acbd et est reconnu.
+    - Le mot numéro 8 est acbd et n'est pas reconnu.
     - Le mot numéro 9 est bbcc et n'est pas reconnu.
 
 L'Automate Complémentaire :

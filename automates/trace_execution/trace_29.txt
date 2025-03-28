@@ -46,7 +46,7 @@ L'Automate Deterministe :
 
 
 Reconaissance de mots :
-    - Le mot numéro 0 est a et n'est pas reconnu.
+    - Le mot numéro 0 est a et est reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
     - Le mot numéro 2 est ab et n'est pas reconnu.
     - Le mot numéro 3 est aa et est reconnu.

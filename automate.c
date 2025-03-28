@@ -78,9 +78,15 @@ void lire_automate_sur_fichier(char *nom_fichier, Automate *AF){
     }
 
     // stockage des états en fonction des départs des transitions
-    for(int i = 0; i < AF->num_states; i++){
-        memcpy(AF->states[i].inter_states, AF->transitions[i*AF->num_symbols].from, sizeof(int) * MAX_DEPART);
-        AF->states[i].num_inter_states = AF->transitions[i*AF->num_symbols].num_depart;
+    if(AF->num_transitions == 0){
+        AF->states[0].num_inter_states = 1;
+        AF->states[0].inter_states[0] = 0;
+    }
+    else{
+        for(int i = 0; i < AF->num_states; i++){
+            memcpy(AF->states[i].inter_states, AF->transitions[i*AF->num_symbols].from, sizeof(int) * MAX_DEPART);
+            AF->states[i].num_inter_states = AF->transitions[i*AF->num_symbols].num_depart;
+        }
     }
 
     fclose(file);
@@ -656,16 +662,38 @@ void enlever_colonne_E(Automate *AF) {
     }
 }
 
+void trouver_final_states(Automate *AF, int final_state) {
+    for(int i = 0; i < AF->num_states; i++){
+        for(int k = 0; k < AF->num_symbols; k++){
+            if(AF->transitions[i*AF->num_symbols + k].symbol == 'E'){
+                for(int z = 0; z < AF->transitions[i*AF->num_symbols + k].num_destinations; z++){
+                    if(AF->transitions[i*AF->num_symbols + k].to[z] == final_state){
+                        AF->final_states[AF->num_final_states].inter_states[0] = i;
+                        AF->final_states[AF->num_final_states].num_inter_states = 1;
+
+                        AF->num_final_states++;
+                        trouver_final_states(AF, i);
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Fonction pour rendre un automate déterministe après suppression des epsilon transitions
 void rendre_deterministe_asynchrone(Automate *AF) {
     Automate AF_synchrone;
     eliminer_transitions_epsilon(AF, &AF_synchrone);
 
+    trouver_final_states(AF, AF->final_states[0].inter_states[0]);
+
     Automate AFD;
+    AFD.num_final_states = 0;
     AFD.num_transitions = 0;
     AFD.num_states = 0;
     AFD.num_symbols = AF_synchrone.num_symbols;
     memcpy(AFD.symbols, AF_synchrone.symbols, sizeof(AF_synchrone.symbols));
+
 
     // Création du premier état déterministe (ensemble des états initiaux)
     States initial;
@@ -677,6 +705,18 @@ void rendre_deterministe_asynchrone(Automate *AF) {
     AFD.num_states = 1;
     AFD.initial_states[0] = initial;
     AFD.num_initial_states = 1;
+    bool in = false;
+    for(int t = 0; t < AF->num_final_states; t++){
+        for(int p = 0; p < initial.num_inter_states; p++){
+            if(AF->final_states[t].inter_states[0] == initial.inter_states[p]){
+                in = true;
+            }
+        }
+    }
+    if(in == true){
+        AFD.final_states[AFD.num_final_states] = initial;
+        AFD.num_final_states++;
+    }
 
     int index = 1;
     int count = 0;
@@ -701,10 +741,25 @@ void rendre_deterministe_asynchrone(Automate *AF) {
                 }
             }
 
+
+
             if (nouvel_etat.num_inter_states > 0 && !etat_existe(AFD.states, AFD.num_states, nouvel_etat)) {
                 AFD.states[index] = nouvel_etat;
                 index++;
                 AFD.num_states++;
+
+                bool in = false;
+                for(int t = 0; t < AF->num_final_states; t++){
+                    for(int p = 0; p < nouvel_etat.num_inter_states; p++){
+                        if(AF->final_states[t].inter_states[0] == nouvel_etat.inter_states[p]){
+                            in = true;
+                        }
+                    }
+                }
+                if(in == true){
+                    AFD.final_states[AFD.num_final_states] = nouvel_etat;
+                    AFD.num_final_states++;
+                }
             }
 
             // Ajout de la transition
@@ -725,6 +780,8 @@ void rendre_deterministe_asynchrone(Automate *AF) {
         }
         count++;
     }
+
+
     memcpy(AF, &AFD, sizeof(Automate));
     AF->a_ete_rendu_deterministe = true;
     enlever_colonne_E(AF);

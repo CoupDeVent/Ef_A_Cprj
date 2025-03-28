@@ -1,27 +1,16 @@
 Automate numéro 1 :
 
-+--------+---+---+
-|        | a | b |
-+----+---+---+---+
-| ES | 0 | - | - |
-+----+---+---+---+
++--------+
+|        |
++----+---+
+| ES | 0 |
++----+---+
 
 
 L'automate est :
    - Deterministe
    - Standard
-   - Non Complet
-
-L'Automate Complete :
-
-+--------+---+---+
-|        | a | b |
-+----+---+---+---+
-| ES | 0 | P | P |
-+----+---+---+---+
-|    | P | P | P |
-+----+---+---+---+
-
+   - Complet
 
 Reconaissance de mots :
     - Le mot numéro 0 est a et n'est pas reconnu.
@@ -37,10 +26,8 @@ Reconaissance de mots :
 
 L'Automate Complémentaire :
 
-+--------+---+---+
-|        | a | b |
-+----+---+---+---+
-| E  | 0 | P | P |
-+----+---+---+---+
-| S  | P | P | P |
-+----+---+---+---+
++--------+
+|        |
++----+---+
+| E  | 0 |
++----+---+

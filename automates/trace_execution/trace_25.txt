@@ -39,25 +39,6 @@ L'Automate Standard :
 +----+---+-----+-----+-----+-----+
 
 
-L'Automate Complete :
-
-+--------+-----+-----+-----+-----+
-|        | a   | b   | c   | d   |
-+----+---+-----+-----+-----+-----+
-| S  | 0 | P   | P   | P   | P   |
-+----+---+-----+-----+-----+-----+
-| E  | 1 | 1,2 | 3   | 4   | 0   |
-+----+---+-----+-----+-----+-----+
-|    | 2 | 2   | 3   | 4   | 0   |
-+----+---+-----+-----+-----+-----+
-|    | 3 | P   | P   | 3,4 | 0   |
-+----+---+-----+-----+-----+-----+
-|    | 4 | P   | P   | P   | 4,0 |
-+----+---+-----+-----+-----+-----+
-|    | P | P   | P   | P   | P   |
-+----+---+-----+-----+-----+-----+
-
-
 L'Automate Deterministe :
 
 +----------+-----+-----+-----+-----+
@@ -79,6 +60,29 @@ L'Automate Deterministe :
 +----+-----+-----+-----+-----+-----+
 
 
+L'Automate Complete :
+
++----------+-----+-----+-----+-----+
+|          | a   | b   | c   | d   |
++----+-----+-----+-----+-----+-----+
+| E  | 1   | 1,2 | 3   | 4   | 0   |
++----+-----+-----+-----+-----+-----+
+|    | 1,2 | 1,2 | 3   | 4   | 0   |
++----+-----+-----+-----+-----+-----+
+|    | 3   | P   | P   | 3,4 | 0   |
++----+-----+-----+-----+-----+-----+
+|    | 4   | P   | P   | P   | 0,4 |
++----+-----+-----+-----+-----+-----+
+| S  | 0   | P   | P   | P   | P   |
++----+-----+-----+-----+-----+-----+
+|    | 3,4 | P   | P   | 3,4 | 0,4 |
++----+-----+-----+-----+-----+-----+
+| S  | 0,4 | P   | P   | P   | 0,4 |
++----+-----+-----+-----+-----+-----+
+|    | P   | P   | P   | P   | P   |
++----+-----+-----+-----+-----+-----+
+
+
 Reconaissance de mots :
     - Le mot numéro 0 est a et n'est pas reconnu.
     - Le mot numéro 1 est b et n'est pas reconnu.
@@ -88,8 +92,8 @@ Reconaissance de mots :
     - Le mot numéro 5 est aaa et n'est pas reconnu.
     - Le mot numéro 6 est abcd et est reconnu.
     - Le mot numéro 7 est abab et n'est pas reconnu.
-    - Le mot numéro 8 est acbd et est reconnu.
-    - Le mot numéro 9 est bbcc et est reconnu.
+    - Le mot numéro 8 est acbd et n'est pas reconnu.
+    - Le mot numéro 9 est bbcc et n'est pas reconnu.
 
 L'Automate Complémentaire :
 

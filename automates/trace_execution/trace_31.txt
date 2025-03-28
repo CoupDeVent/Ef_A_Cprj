@@ -68,8 +68,8 @@ L'Automate Complete :
 
 Reconaissance de mots :
     - Le mot numéro 0 est a et n'est pas reconnu.
-    - Le mot numéro 1 est b et n'est pas reconnu.
-    - Le mot numéro 2 est ab et n'est pas reconnu.
+    - Le mot numéro 1 est b et est reconnu.
+    - Le mot numéro 2 est ab et est reconnu.
     - Le mot numéro 3 est aa et n'est pas reconnu.
     - Le mot numéro 4 est abc et n'est pas reconnu.
     - Le mot numéro 5 est aaa et n'est pas reconnu.

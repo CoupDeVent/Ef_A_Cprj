@@ -76,7 +76,6 @@ int main() {
             printf("\n\nL'Automate Complete :\n\n");
             rendre_complet(&AF);
             afficher_automate(&AF);
-            lire_automate_sur_fichier(nom_fichier, &AF);
         }
 
         printf("\n\nReconaissance de mots :");
@@ -88,6 +87,7 @@ int main() {
             if (reconnaitre_mot(&AF, test_words[i])) printf(" et est reconnu.");
             else printf(" et n'est pas reconnu.");
         }
+        lire_automate_sur_fichier(nom_fichier, &AF);
 
         printf("\n\nL'Automate Complémentaire :\n\n");
         if (!est_deterministe(&AF)) {
@@ -154,7 +154,8 @@ int main() {
             printf("\n    4- Rendre complementaire l'automate.");
             printf("\n    5- Reconnaitre un mot dans l'automate.");
             printf("\n    6- Afficher l'automate.");
-            printf("\n    7- Quitter.");
+            printf("\n    7- Reinitialise l'automate");
+            printf("\n    8- Quitter.");
             printf("\n");
             int faire = -1;
             while(faire < 1 || faire > 7){
@@ -169,7 +170,6 @@ int main() {
                         printf("\nL'automate a ete rendu standard :\n");
                         afficher_automate(&AF);
                     }
-                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 2:{
@@ -191,7 +191,6 @@ int main() {
                         printf("\nL'automate a ete rendu complet :\n");
                         afficher_automate(&AF);
                     }
-                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 4:{
@@ -205,7 +204,6 @@ int main() {
                     complementaire_automate(&AF);
                     printf("\nVoici l'automate complementaire :\n");
                     afficher_automate(&AF);
-                    lire_automate_sur_fichier(nom_fichier, &AF);
                     break;
                 }
                 case 5:{
@@ -246,6 +244,10 @@ int main() {
                     break;
                 }
                 case 7:{
+                    lire_automate_sur_fichier(nom_fichier, &AF);
+                    break;
+                }
+                case 8:{
                     inter_end = true;
                     break;
                 }

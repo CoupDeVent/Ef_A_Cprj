@@ -98,7 +98,7 @@ Reconaissance de mots :
     - Le mot numéro 3 est aa et n'est pas reconnu.
     - Le mot numéro 4 est abc et n'est pas reconnu.
     - Le mot numéro 5 est aaa et n'est pas reconnu.
-    - Le mot numéro 6 est abcd et est reconnu.
+    - Le mot numéro 6 est abcd et n'est pas reconnu.
     - Le mot numéro 7 est abab et n'est pas reconnu.
     - Le mot numéro 8 est acbd et n'est pas reconnu.
     - Le mot numéro 9 est bbcc et n'est pas reconnu.

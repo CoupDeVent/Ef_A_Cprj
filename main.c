@@ -8,6 +8,7 @@
 #include "automate.c"
 
 int main() {
+    /*
     FILE *fichier;
     int saved_stdout = dup(STDOUT_FILENO);  // Sauvegarde la sortie standard
     Automate AF;
@@ -115,9 +116,9 @@ int main() {
 
     // Fermer la sauvegarde de stdout
     close(saved_stdout);
+    */
 
 
-    /*
     bool end = false;
     while(!end){
         Automate AF;
@@ -251,7 +252,5 @@ int main() {
             }
         }
     }
-     */
-
     return 0;
 }

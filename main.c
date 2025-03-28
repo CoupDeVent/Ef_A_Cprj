@@ -158,7 +158,7 @@ int main() {
             printf("\n    8- Quitter.");
             printf("\n");
             int faire = -1;
-            while(faire < 1 || faire > 7){
+            while(faire < 1 || faire > 8){
                 scanf("%d", &faire);
             }
 
